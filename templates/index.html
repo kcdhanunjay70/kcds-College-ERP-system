@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KCDS College ERP System</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="#dashboard"><span>KC</span><strong>KCDS ERP</strong></a>
+    <nav>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#students">Students</a>
+      <a href="#faculty">Faculty</a>
+      <a href="#courses">Courses</a>
+      <a href="#notices">Notices</a>
+    </nav>
+    <div class="sidebar-card">
+      <span>Portal Mode</span>
+      <strong id="dbMode">Loading</strong>
+      <p>Admin, faculty and student operations in one MongoDB powered portal.</p>
+    </div>
+  </aside>
+
+  <main class="app-shell">
+    <header class="topbar" id="dashboard">
+      <div>
+        <p class="kicker">Complete College Management Portal</p>
+        <h1>College ERP System for admin, faculty and student records.</h1>
+      </div>
+      <a class="top-action" href="#studentForm">Add Student</a>
+    </header>
+
+    <section class="stats" id="stats"></section>
+
+    <section class="hero-band">
+      <div>
+        <span>Today Overview</span>
+        <strong id="overviewTitle">Academic control center</strong>
+        <p>Track student strength, faculty availability, attendance, fee dues, course allocation and notices from one responsive dashboard.</p>
+      </div>
+      <div class="mini-panels">
+        <article><small>Admin</small><b>Records</b></article>
+        <article><small>Faculty</small><b>Attendance</b></article>
+        <article><small>Student</small><b>Fees</b></article>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <form class="panel" id="studentForm">
+        <div class="section-head">
+          <span>Admin Module</span>
+          <h2>Add Student</h2>
+        </div>
+        <div class="form-grid">
+          <label>Roll No<input name="rollNo" required placeholder="KCDS24CSE001"></label>
+          <label>Name<input name="name" required placeholder="Student name"></label>
+          <label>Department<select name="department">{% for item in departments %}<option>{{ item }}</option>{% endfor %}</select></label>
+          <label>Year<select name="year">{% for item in years %}<option>{{ item }}</option>{% endfor %}</select></label>
+          <label>Phone<input name="phone" required maxlength="10" placeholder="10 digit mobile"></label>
+          <label>Email<input name="email" required type="email" placeholder="student@kcds.edu"></label>
+          <label>Attendance %<input name="attendance" type="number" min="0" max="100" value="85"></label>
+          <label>Fee Due<input name="feeDue" type="number" min="0" max="500000" value="0"></label>
+        </div>
+        <button type="submit">Save Student</button>
+        <p class="form-message" id="studentMessage"></p>
+      </form>
+
+      <form class="panel" id="facultyForm">
+        <div class="section-head">
+          <span>Faculty Module</span>
+          <h2>Add Faculty</h2>
+        </div>
+        <div class="form-grid">
+          <label>Faculty ID<input name="facultyId" required placeholder="FAC-CSE-09"></label>
+          <label>Name<input name="name" required placeholder="Faculty name"></label>
+          <label>Department<select name="department">{% for item in departments %}<option>{{ item }}</option>{% endfor %}</select></label>
+          <label>Designation<input name="designation" required placeholder="Assistant Professor"></label>
+          <label>Phone<input name="phone" required maxlength="10" placeholder="10 digit mobile"></label>
+          <label>Email<input name="email" required type="email" placeholder="faculty@kcds.edu"></label>
+        </div>
+        <label>Subjects<input name="subjects" placeholder="DBMS, Python, Machine Learning"></label>
+        <button type="submit">Save Faculty</button>
+        <p class="form-message" id="facultyMessage"></p>
+      </form>
+    </section>
+
+    <section class="panel data-panel" id="students">
+      <div class="section-head row">
+        <div>
+          <span>Student Records</span>
+          <h2>Students, Attendance and Fees</h2>
+        </div>
+        <input id="studentSearch" type="search" placeholder="Search students">
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Student</th><th>Department</th><th>Attendance</th><th>Fee Due</th><th>Status</th></tr></thead>
+          <tbody id="studentRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel data-panel" id="faculty">
+      <div class="section-head row">
+        <div>
+          <span>Faculty Records</span>
+          <h2>Faculty Workload</h2>
+        </div>
+        <input id="facultySearch" type="search" placeholder="Search faculty">
+      </div>
+      <div class="faculty-grid" id="facultyGrid"></div>
+    </section>
+
+    <section class="panel data-panel" id="courses">
+      <div class="section-head">
+        <span>Academic Module</span>
+        <h2>Courses and Allotments</h2>
+      </div>
+      <div class="course-grid" id="courseGrid"></div>
+    </section>
+
+    <section class="workspace" id="notices">
+      <form class="panel" id="noticeForm">
+        <div class="section-head">
+          <span>Communication Module</span>
+          <h2>Publish Notice</h2>
+        </div>
+        <div class="form-grid">
+          <label>Title<input name="title" required placeholder="Notice title"></label>
+          <label>Audience<select name="audience"><option>All</option><option>Students</option><option>Faculty</option><option>Admin</option></select></label>
+          <label>Priority<select name="priority"><option>Medium</option><option>High</option><option>Low</option></select></label>
+        </div>
+        <label>Message<textarea name="message" required rows="4" placeholder="Write announcement"></textarea></label>
+        <button type="submit">Publish Notice</button>
+        <p class="form-message" id="noticeMessage"></p>
+      </form>
+
+      <section class="panel">
+        <div class="section-head">
+          <span>Live Notices</span>
+          <h2>Latest Announcements</h2>
+        </div>
+        <div class="notice-list" id="noticeList"></div>
+      </section>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
